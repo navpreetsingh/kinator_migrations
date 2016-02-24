@@ -1,0 +1,21 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  channel_name: MyString
+  channgel_data_field: MyString
+  channel_unique_key: MyText
+  channel_code: MyString
+  has_product_id: false
+  has_city: false
+  icon: MyText
+  business_model: MyString
+
+two:
+  channel_name: MyString
+  channgel_data_field: MyString
+  channel_unique_key: MyText
+  channel_code: MyString
+  has_product_id: false
+  has_city: false
+  icon: MyText
+  business_model: MyString
