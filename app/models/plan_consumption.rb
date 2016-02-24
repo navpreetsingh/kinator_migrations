@@ -1,4 +1,3 @@
 class PlanConsumption < ActiveRecord::Base
-  belongs_to :plan_subscription
-  belongs_to :group_detail
+  belongs_to :subscription_plan
 end

@@ -24,7 +24,7 @@ development:
   database: pim_pim
   username: postgres
   password: paxcel123
-  # schema_search_path: "pim"
+  schema_search_path: "demo1"
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".

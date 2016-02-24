@@ -1,21 +1,15 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  plan_subscription_id: 
-  group_detail_id: 
-  month_year: 2016-02-22
-  hits_allowed: 1
+  subscription_plan_id: 
+  plan_end_date: 2016-02-24 11:02:12
   hits_consumed: 1
-  successful_hits: 1
   exhausted: false
-  exhausted_date: 2016-02-22
+  exhausted_date: 2016-02-24 11:02:12
 
 two:
-  plan_subscription_id: 
-  group_detail_id: 
-  month_year: 2016-02-22
-  hits_allowed: 1
+  subscription_plan_id: 
+  plan_end_date: 2016-02-24 11:02:12
   hits_consumed: 1
-  successful_hits: 1
   exhausted: false
-  exhausted_date: 2016-02-22
+  exhausted_date: 2016-02-24 11:02:12
