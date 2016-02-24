@@ -17,16 +17,14 @@ ActiveRecord::Schema.define(version: 20160224053310) do
   enable_extension "plpgsql"
 
   create_table "channel_details", force: :cascade do |t|
-    t.string   "channel_name"
-    t.string   "channgel_data_field"
-    t.text     "channel_unique_key"
-    t.string   "channel_code"
-    t.boolean  "has_product_id"
-    t.boolean  "has_city"
-    t.text     "icon"
-    t.string   "business_model"
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
+    t.string  "channel_name"
+    t.string  "channel_data_field"
+    t.text    "channel_unique_key"
+    t.string  "channel_code"
+    t.boolean "has_product_id"
+    t.boolean "has_city"
+    t.text    "icon"
+    t.string  "business_model"
   end
 
   create_table "group_authentication_details", force: :cascade do |t|
@@ -54,10 +52,10 @@ ActiveRecord::Schema.define(version: 20160224053310) do
 
   create_table "plan_consumptions", force: :cascade do |t|
     t.integer  "subscription_plan_id"
-    t.datetime "plan_end_date"
-    t.integer  "hits_consumed"
-    t.boolean  "exhausted"
-    t.datetime "exhausted_date"
+    t.jsonb    "plan_end_date"
+    t.jsonb    "hits_consumed"
+    t.jsonb    "exhausted"
+    t.jsonb    "exhausted_date"
     t.datetime "created_at",           null: false
     t.datetime "updated_at",           null: false
   end
@@ -66,22 +64,20 @@ ActiveRecord::Schema.define(version: 20160224053310) do
 
   create_table "subscription_plans", force: :cascade do |t|
     t.integer  "group_detail_id"
-    t.integer  "channel_detail_id"
-    t.integer  "max_hits_allowed"
-    t.boolean  "auto_renewal"
-    t.datetime "start_date"
-    t.integer  "duration"
-    t.boolean  "active"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.text     "channel_ids",          default: [],              array: true
+    t.jsonb    "max_hits_allowed"
+    t.boolean  "channel_distribution"
+    t.jsonb    "auto_renewal"
+    t.jsonb    "start_date"
+    t.jsonb    "duration"
+    t.jsonb    "active"
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
   end
 
-  add_index "subscription_plans", ["channel_detail_id"], name: "index_subscription_plans_on_channel_detail_id", using: :btree
-  add_index "subscription_plans", ["group_detail_id", "channel_detail_id"], name: "subscription_plan_details", unique: true, using: :btree
   add_index "subscription_plans", ["group_detail_id"], name: "index_subscription_plans_on_group_detail_id", using: :btree
 
   add_foreign_key "group_authentication_details", "group_details"
   add_foreign_key "plan_consumptions", "subscription_plans"
-  add_foreign_key "subscription_plans", "channel_details"
   add_foreign_key "subscription_plans", "group_details"
 end
