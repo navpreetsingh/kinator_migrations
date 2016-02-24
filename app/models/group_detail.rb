@@ -1,7 +1,6 @@
-class GroupDetail < ActiveRecord::Base
-	has_one :group_authentication_detail
+class GroupDetail < ActiveRecord::Base	
 	has_one :subscription_plan
-	has_many :plan_consumptions, through: :subscription_plan
+	has_many :api_stats
 	
 
 

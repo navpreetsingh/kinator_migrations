@@ -5,7 +5,10 @@ class CreateGroupDetails < ActiveRecord::Migration
       t.date :start_date
       t.date :end_date
       t.jsonb :header_json
-      t.boolean :api_subscription
+      t.string :user_id
+      t.string :secret_key
+      t.text :authorized_urls, array: true, default: []
+      t.string :email
 
       t.timestamps null: false
     end

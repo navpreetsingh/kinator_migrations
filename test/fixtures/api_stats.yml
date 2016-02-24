@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  group_detail_id: 
+  channel_detail_id: 
+  SKU_id: 
+  version: 
+  IP: 
+
+two:
+  group_detail_id: 
+  channel_detail_id: 
+  SKU_id: 
+  version: 
+  IP: 
