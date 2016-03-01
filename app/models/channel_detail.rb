@@ -1,4 +1,5 @@
-class ChannelDetail < ActiveRecord::Base	
+class ChannelDetail < ActiveRecord::Base
+	self.table_name = "channel_detail"	
 	has_many :api_stats
 
 	def group_details

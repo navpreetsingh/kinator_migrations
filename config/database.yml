@@ -17,14 +17,15 @@ default: &default
   adapter: postgresql
   pool: 5
   timeout: 5000
-  host: localhost
+  host: 172.16.0.61
 
 development:
   <<: *default
-  database: pim_pim
+  database: pim
   username: postgres
-  password: paxcel123
-  schema_search_path: "demo3"
+  password: paxceldevPIMQWERRTY
+  schema_search_path: "pim"
+  port: 9999
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
