@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: MyString
+  secret_key: MyString
+  url: MyText
+  group_details_id: 
+  subsciption_plan: 
+
+two:
+  user_id: MyString
+  secret_key: MyString
+  url: MyText
+  group_details_id: 
+  subsciption_plan: 
