@@ -12,5 +12,11 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require bootstrap-sprockets
+//= require jquery-ui
 //= require turbolinks
+//= require semantic-ui
+//= require semantic-ui/modal
+//= require semantic-ui/dropdown
+
 //= require_tree .

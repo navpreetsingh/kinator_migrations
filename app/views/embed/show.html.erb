@@ -1,5 +1,12 @@
-<h1>Embed#show</h1>
-<p>Find me in app/views/embed/show.html.erb</p>
+<%= link_to "Search", elastic_search_url %>
+
+<h1>PIM TABLES</h1>
 <div>
-	<embed src="http://localhost:8089/" width="100%" height="500px">
+	<ul>
+		<% ActiveRecord::Base.connection.tables.sort.each do |table| %>
+			<li>
+				<%= link_to table, embed_show_url(table_name: table.camelize),target: "_blank" %>
+			</li>
+		<% end %>
+	</ul>	
 </div>

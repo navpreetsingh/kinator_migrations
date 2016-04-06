@@ -1,0 +1,6 @@
+<% @data.keys.each do |key| %>
+	<option value="<%= key %>" disabled style="background-color: green;"> <%= key.upcase %> </option>
+	<% @data[key].each do |value| %>
+		<option value="<%= key %>.<%= value %>"> <%= value %></option>
+	<% end %>	
+<% end %>

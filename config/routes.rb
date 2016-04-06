@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  match "elastic_suggestion" => 'elastic_search#suggestion', via: [:post, :get]
+
+  match "elastic_search" => 'elastic_search#search', via: [:post, :get]
+
   get 'embed/show'
 
   # The priority is based upon order of creation: first created -> highest priority.

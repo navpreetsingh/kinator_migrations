@@ -15,6 +15,7 @@ ActiveRecord::Schema.define(version: 20160224081246) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "hstore"
 
   create_table "amazon_sales", force: :cascade do |t|
     t.text    "sku_id",       null: false
@@ -52,6 +53,21 @@ ActiveRecord::Schema.define(version: 20160224081246) do
     t.integer "sale_value"
   end
 
+  create_table "brand_catg_assoc", force: :cascade do |t|
+    t.integer  "brand_id",          default: "nextval('brand_catg_assoc_brand_id_seq'::regclass)",   null: false
+    t.integer  "created_by",        default: "nextval('brand_catg_assoc_created_by_seq'::regclass)", null: false
+    t.datetime "created_timestamp"
+    t.text     "category_id"
+  end
+
+  create_table "brand_detail", force: :cascade do |t|
+    t.text     "brand_name"
+    t.integer  "created_by",        default: "nextval('brand_detail_created_by_seq'::regclass)", null: false
+    t.datetime "created_timestamp"
+  end
+
+  add_index "brand_detail", ["brand_name"], name: "brand_name_uk", unique: true, using: :btree
+
   create_table "brand_sale", force: :cascade do |t|
     t.text     "brand",                      null: false
     t.decimal  "sales_qty",    default: 0.0
@@ -77,7 +93,12 @@ ActiveRecord::Schema.define(version: 20160224081246) do
   end
 
   create_table "category_detail", force: :cascade do |t|
-    t.jsonb "category_field_json", null: false
+    t.jsonb    "category_field_json", null: false
+    t.integer  "groupid"
+    t.datetime "creation_time"
+    t.datetime "updation_time"
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "category_detail", ["category_field_json"], name: "category_field_json_index", using: :gin
@@ -182,23 +203,48 @@ ActiveRecord::Schema.define(version: 20160224081246) do
   end
 
   create_table "group_detail", force: :cascade do |t|
-    t.string   "name",            limit: 50,              null: false
+    t.string   "name",               limit: 50,              null: false
     t.datetime "start_date"
     t.datetime "end_date"
     t.jsonb    "header_json"
+    t.jsonb    "associated_channel"
     t.string   "email"
     t.string   "user_id"
     t.string   "secret_key"
-    t.text     "authorized_urls",            default: [],              array: true
+    t.text     "authorize_urls",                default: [],              array: true
   end
 
   create_table "image_detail", force: :cascade do |t|
-    t.jsonb   "image_json",   null: false
-    t.integer "group_id",     null: false
-    t.jsonb   "sku_ids_json"
+    t.jsonb    "image_json",    null: false
+    t.integer  "group_id",      null: false
+    t.jsonb    "sku_ids_json"
+    t.datetime "creation_time"
+    t.datetime "updation_time"
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "image_detail", ["image_json"], name: "image_json_index", using: :gin
+
+  create_table "label_detail", force: :cascade do |t|
+    t.text     "label_name"
+    t.integer  "user_id",           default: "nextval('label_detail_user_id_seq'::regclass)", null: false
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.datetime "created_timestamp"
+    t.integer  "group_id"
+    t.jsonb    "search_keywords"
+  end
+
+  create_table "label_prod_assoc", force: :cascade do |t|
+    t.integer  "label_id",          default: "nextval('label_prod_assoc_label_id_seq'::regclass)",    null: false
+    t.integer  "user_id",           default: "nextval('label_prod_assoc_user_id_seq'::regclass)",     null: false
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.datetime "created_timestamp"
+    t.integer  "product_pid",       default: "nextval('label_prod_assoc_product_pid_seq'::regclass)", null: false
+    t.integer  "group_id",          default: "nextval('label_prod_assoc_group_id_seq'::regclass)",    null: false
+  end
 
   create_table "latest_operation", force: :cascade do |t|
     t.string   "action",      null: false
@@ -239,6 +285,8 @@ ActiveRecord::Schema.define(version: 20160224081246) do
     t.datetime "updation_time"
     t.jsonb    "city_wise_mrp"
     t.string   "inserting_mode", limit: 50
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "product_detail", ["product_json"], name: "product_json_index", using: :gin
@@ -254,9 +302,10 @@ ActiveRecord::Schema.define(version: 20160224081246) do
 
   add_index "product_detail_temp", ["product_json"], name: "product_json_index_temp", using: :gin
 
-  create_table "product_history", force: :cascade do |t|
-    t.jsonb    "product_json",  null: false
-    t.integer  "group_id",      null: false
+  create_table "product_history", id: false, force: :cascade do |t|
+    t.integer  "id",            default: "nextval('product_history_id_seq'::regclass)", null: false
+    t.jsonb    "product_json",                                                          null: false
+    t.integer  "group_id",                                                              null: false
     t.datetime "updation_time"
   end
 
@@ -279,6 +328,8 @@ ActiveRecord::Schema.define(version: 20160224081246) do
     t.text     "city"
     t.integer  "group_id"
     t.datetime "sale_date"
+    t.text     "product_name"
+    t.text     "brand_name"
   end
 
   create_table "role", force: :cascade do |t|
@@ -304,8 +355,12 @@ ActiveRecord::Schema.define(version: 20160224081246) do
   add_index "subscription_plans", ["group_detail_id"], name: "index_subscription_plans_on_group_detail_id", using: :btree
 
   create_table "tags", force: :cascade do |t|
-    t.text    "tag_name", null: false
-    t.integer "group_id"
+    t.text     "tag_name",      null: false
+    t.integer  "group_id"
+    t.datetime "creation_time"
+    t.datetime "updation_time"
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   create_table "test", id: false, force: :cascade do |t|
@@ -317,18 +372,27 @@ ActiveRecord::Schema.define(version: 20160224081246) do
     t.jsonb    "user_json",     null: false
     t.datetime "updation_time"
     t.datetime "creation_time"
+    t.integer  "created_by"
+    t.integer  "updated_by"
+    t.text     "auth_mode"
   end
 
   add_index "user_detail", ["user_json"], name: "user_detail_user_json_idx", using: :gin
 
   create_table "video_detail", force: :cascade do |t|
-    t.jsonb   "video_json",   null: false
-    t.integer "group_id",     null: false
-    t.jsonb   "sku_ids_json"
+    t.jsonb    "video_json",    null: false
+    t.integer  "group_id",      null: false
+    t.jsonb    "sku_ids_json"
+    t.datetime "creation_time"
+    t.datetime "updation_time"
+    t.integer  "created_by"
+    t.integer  "updated_by"
   end
 
   add_index "video_detail", ["video_json"], name: "video_json_index", using: :gin
 
+  add_foreign_key "brand_catg_assoc", "user_detail", column: "created_by", name: "brand_catg_uid_fk"
+  add_foreign_key "brand_detail", "user_detail", column: "created_by", name: "brand_uid_fk"
   add_foreign_key "brand_sale", "group_detail", column: "group_id", name: "group_detail.id"
   add_foreign_key "category_grp_keywords", "category_detail", column: "category_id", name: "cgk_cat_fk"
   add_foreign_key "category_grp_keywords", "channel_detail", column: "channel_id", name: "cgk_chnl_fk"
@@ -338,6 +402,10 @@ ActiveRecord::Schema.define(version: 20160224081246) do
   add_foreign_key "channel_promotions", "channel_detail", column: "channel_id", name: "promo_fk"
   add_foreign_key "group_channel", "channel_detail", column: "channel_id", name: "grp_chnl_cid_fk"
   add_foreign_key "group_channel", "group_detail", column: "group_id", name: "grp_chnl_gp_fk"
+  add_foreign_key "label_detail", "user_detail", column: "user_id", name: "label_usr_id"
+  add_foreign_key "label_prod_assoc", "label_detail", column: "label_id", name: "label_id_fk"
+  add_foreign_key "label_prod_assoc", "product_detail", column: "product_pid", name: "label_prod_pid_fk"
+  add_foreign_key "label_prod_assoc", "user_detail", column: "user_id", name: "lable_uid_fk"
   add_foreign_key "product_sale", "group_detail", column: "group_id", name: "product_sale.group_id"
   add_foreign_key "tags", "group_detail", column: "group_id", name: "group_id"
 end

@@ -1,0 +1,35 @@
+<div class = "divs">
+	<p>Conditions:</p>
+	</br>
+	<p class="condition"><%= @data.data.last.conditions.to_json || nil %></p>
+</div>
+
+<div class="divs form">
+	<%= form_for :suggestion, url: elastic_search_url, remote: true do |f| %>
+		<%= f.select :search_params, "<option></option>".html_safe, {prompt: "Search"}, {multiple: "", :class => "ui fluid search dropdown" } %>
+		</br>
+		<%= f.text_field :search_tags, placeholder: "Full Text Search" %>
+		</br>
+		</br>
+		<%= f.submit "Search" %>
+	<% end %>
+</div>
+
+<div class="data-table">
+	<table class="ui celled table">
+		<thead>
+			<tr>
+				<th>SKU</th>
+        <th>PRODUCT NAME</th>
+        <th>BRAND</th>
+        <th>CATEGORY</th>
+        <th>STATUS</th>
+        <th>STATE</th>        
+			</tr>
+		</thead>
+		<tbody class="table-body">
+			<%= render partial: 'elastic_search/data_display' %>					
+		</tbody>
+		</table>
+	</table>
+</div>

@@ -1,0 +1,2 @@
+$(".table-body").html("<%=j render :partial => 'elastic_search/data_display' %>");
+$(".condition").html("<%= @data.data.last.conditions.to_json %>");
